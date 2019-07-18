@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * @Auther: http://www/qfedu.com
@@ -46,9 +47,24 @@ public class UserController {
         }
     }
 
+    @RequestMapping("myAttention")
+    @ApiModelProperty("我关注的，传参登录者id，返回我关注的列表人员")
+    public List<User> myAttention(int id){
+        List<User> userList = userService.selectMyAttention(id);
+        return userList;
+    }
+
+    @RequestMapping("myFocused")
+    @ApiModelProperty("关注我的，传参登录者id，返回关注我的列表人员信息")
+    public List<User> myFocused(int id){
+        List<User> userList = userService.selectMyFocused(id);
+        return userList;
+    }
+
+
 
     @RequestMapping("forgetPassword")
-    @ApiModelProperty("忘记密码，检查email是否存在，如果不存在，返回-1，存在则发送验证码成功,返回1，发送验证码失败返回0")
+    @ApiOperation("忘记密码，检查email是否存在，如果不存在，返回-1，存在则发送验证码成功,返回1，发送验证码失败返回0")
     public int forgetPasword(String email,HttpServletRequest request){
         int result = userService.validEmail(email);
         if(result > 0){
@@ -112,5 +128,7 @@ public class UserController {
             return 0;
         }
     }
+
+
 
 }

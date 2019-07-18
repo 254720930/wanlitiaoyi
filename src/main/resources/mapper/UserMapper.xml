@@ -16,6 +16,31 @@
     select count(1) from user where email = #{email} and password = #{password};
   </select>
 
+  <select id="selectMyAttention" parameterType="int" resultType="integer">
+    select focused from attention where attention = #{id}
+  </select>
+
+  <select id="selectMyFocused" parameterType="int" resultType="integer">
+    select attention from attention where focused = #{id}
+  </select>
+
+
+  <select id="selectMyAttentionUser" resultType="com.xcy.pojo.User" parameterType="integer">
+    select * from user
+    <foreach item="item" index="index" collection="array"
+             open="WHERE ID in(" separator="," close=")">
+      #{item}
+    </foreach>
+  </select>
+
+  <select id="selectMyFocusedUser" resultType="com.xcy.pojo.User" parameterType="integer">
+    select * from user
+    <foreach item="item" index="index" collection="array"
+             open="WHERE ID in(" separator="," close=")">
+      #{item}
+    </foreach>
+  </select>
+
   <!--  通过id删除整行数据  -->
   <delete id="deleteByPrimaryKey" parameterType="int" >
     delete from user

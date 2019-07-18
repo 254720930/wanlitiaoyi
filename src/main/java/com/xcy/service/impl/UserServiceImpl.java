@@ -6,6 +6,8 @@ import com.xcy.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 /**
  * @Auther: http://www/qfedu.com
@@ -45,5 +47,19 @@ public class UserServiceImpl implements UserService {
     @Override
     public int resetPassword(User user) {
         return userMapper.resetPassword(user);
+    }
+
+    @Override
+    public List<User> selectMyAttention(int id) {
+        Integer[] ids = userMapper.selectMyAttention(id);
+        List<User> userList = userMapper.selectMyAttentionUser(ids);
+        return userList;
+    }
+
+    @Override
+    public List<User> selectMyFocused(int id) {
+        Integer[] ids = userMapper.selectMyFocused(id);
+        List<User> userList = userMapper.selectMyFocusedUser(ids);
+        return userList;
     }
 }
