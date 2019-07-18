@@ -2,6 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.xcy.mapper.UserMapper" >
 
+
+  <sql id="selectUser">
+    select u.*,m.marrys from user u left join maryy m where u.marryId = m.id
+  </sql>
+
   <!-- 通过email检查是否存在-->
   <select id="validEmail" resultType="int" parameterType="string">
         select count(1) from user where email = #{email}
@@ -9,7 +14,8 @@
 
 
   <select id="selectUserByEmail" resultType="com.xcy.pojo.User" parameterType="string">
-        select * from user where email = #{email}
+        <include refid="selectUser" />
+         and u.email = #{email}
   </select>
 
   <select id="login" resultType="int">
@@ -26,7 +32,7 @@
 
 
   <select id="selectMyAttentionUser" resultType="com.xcy.pojo.User" parameterType="integer">
-    select * from user
+    <include refid="selectUser" />
     <foreach item="item" index="index" collection="array"
              open="WHERE ID in(" separator="," close=")">
       #{item}
@@ -34,7 +40,7 @@
   </select>
 
   <select id="selectMyFocusedUser" resultType="com.xcy.pojo.User" parameterType="integer">
-    select * from user
+    <include refid="selectUser" />
     <foreach item="item" index="index" collection="array"
              open="WHERE ID in(" separator="," close=")">
       #{item}

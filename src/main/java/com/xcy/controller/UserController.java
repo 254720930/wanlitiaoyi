@@ -48,14 +48,14 @@ public class UserController {
     }
 
     @RequestMapping("myAttention")
-    @ApiModelProperty("我关注的，传参登录者id，返回我关注的列表人员")
+    @ApiOperation("我关注的，传参登录者id，返回我关注的列表人员")
     public List<User> myAttention(int id){
         List<User> userList = userService.selectMyAttention(id);
         return userList;
     }
 
     @RequestMapping("myFocused")
-    @ApiModelProperty("关注我的，传参登录者id，返回关注我的列表人员信息")
+    @ApiOperation("关注我的，传参登录者id，返回关注我的列表人员信息")
     public List<User> myFocused(int id){
         List<User> userList = userService.selectMyFocused(id);
         return userList;
@@ -83,19 +83,24 @@ public class UserController {
 
 
     @RequestMapping("register")
-    @ApiOperation("注册功能,需要传入的值为邮箱和密码，注册成功返回该用户ID，注册失败返回-1")
-    public int register(String email, String password) throws Exception {
-        User user = new User();
-        user.setEmail(email);
-        user.setPassword(Md5Util.encodeByMd5(password));
-        int result = userService.register(user);
-        if (result > 0){
-            User user1 = userService.selectUserByEmail(user.getEmail());
-            return user1.getId();
+    @ApiOperation("注册功能,需要传入的值为邮箱和密码，注册成功返回该用户ID，注册失败返回-1,验证码错误返回－2")
+    public int register(String email, String password,String yzm,HttpServletRequest request) throws Exception {
+        Object registerYzm = request.getSession().getAttribute("registerYzm");
+        boolean equals = registerYzm.equals(yzm);
+        if (equals){
+            User user = new User();
+            user.setEmail(email);
+            user.setPassword(Md5Util.encodeByMd5(password));
+            int result = userService.register(user);
+            if (result > 0){
+                User user1 = userService.selectUserByEmail(user.getEmail());
+                return user1.getId();
+            } else {
+                return -1;
+            }
         } else {
-            return -1;
+            return -2;
         }
-
     }
 
 
@@ -116,19 +121,24 @@ public class UserController {
     }
 
     @RequestMapping("resetPassword")
-    @ApiOperation("重置密码功能，需要传参 邮箱 密码 反回1表示重置成功,0表示失败")
-    public int resetPassword(String email,String password) throws Exception {
-        User user = new User();
-        user.setEmail(email);
-        user.setPassword(Md5Util.encodeByMd5(password));
-        int isReset = userService.resetPassword(user);
-        if (isReset > 0){
-            return 1;
-        } else {
-            return 0;
+    @ApiOperation("重置密码功能，需要传参 邮箱 密码 反回1表示重置成功,0表示失败,-2表示验证码错误")
+    public int resetPassword(String email,String password, String yzm,HttpServletRequest request) throws Exception {
+        Object registerYzm = request.getSession().getAttribute("registerYzm");
+        boolean equals = registerYzm.equals(yzm);
+        if (equals) {
+            User user = new User();
+            user.setEmail(email);
+            user.setPassword(Md5Util.encodeByMd5(password));
+            int isReset = userService.resetPassword(user);
+            if (isReset > 0) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }else {
+            return -2;
         }
     }
-
 
 
 }
