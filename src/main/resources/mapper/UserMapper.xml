@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xcy.mapper.UserMapper" >
+
+  <!-- 通过email检查是否存在-->
+  <select id="validEmail" resultType="int" parameterType="string">
+        select count(1) from user where email = #{email}
+  </select>
+
+
+  <select id="selectUserByEmail" resultType="com.xcy.pojo.User" parameterType="string">
+        select * from user where email = #{email}
+  </select>
+
+  <!--  通过id删除整行数据  -->
+  <delete id="deleteByPrimaryKey" parameterType="int" >
+    delete from user
+    where id = #{id}
+  </delete>
+
+
+  <insert id="register" parameterType="com.xcy.pojo.User">
+     insert into user(id,email,password) values (null,#{email},#{password})
+  </insert>
+
+  <!--  修改通过id -->
+  <update id="updateByPrimaryKey" parameterType="com.xcy.pojo.User" >
+    update admin
+    set phone = #{phone,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      verificationcode = #{verificationcode,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR}
+    where id = #{id}
+  </update>
+</mapper>

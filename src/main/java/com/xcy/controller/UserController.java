@@ -1,14 +1,14 @@
 package com.xcy.controller;
 
-import com.xcy.service.AdminService;
+import com.xcy.pojo.User;
+import com.xcy.service.UserService;
 import com.xcy.utils.EmailYzmUtils;
 import com.xcy.utils.MailUtils;
+import com.xcy.utils.Md5Util;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -19,19 +19,18 @@ import javax.servlet.http.HttpServletRequest;
  * @version: 1.0
  */
 
-@Controller
-@RequestMapping("admin")
-public class AdminController {
+@RestController
+@RequestMapping("user")
+public class UserController {
 
     @Autowired
-    AdminService adminService;
+    UserService userService;
 
     @RequestMapping("validEmail")
-    @ResponseBody
     @ApiOperation("检查email是否存在，如果不存在，发送验证码，返回值0代表邮箱已被注册，1代表发送成功,-1代表发送验证码失败")
-    public String validEmail(String email,@ApiParam("用来获取session，不用传值") HttpServletRequest request){
+    public String validEmail(String email, HttpServletRequest request){
         System.out.println(email+"++++++++++++++++++++++++++++++++++++++++++");
-        int result = adminService.validEmail(email);
+        int result = userService.validEmail(email);
         if (result > 0){
             return "0";//说明该邮箱已被注册
         } else {
@@ -45,5 +44,22 @@ public class AdminController {
             }
 
         }
+    }
+
+    @RequestMapping("register")
+    @ApiOperation("注册功能,需要传入的值为邮箱和密码，注册成功返回该用户ID，注册失败返回-1")
+    public int register(String email, String password) throws Exception {
+        System.out.println(email + "===============" +password);
+        User user = new User();
+        user.setEmail(email);
+        user.setPassword(Md5Util.encodeByMd5(password));
+        int result = userService.register(user);
+        if (result > 0){
+            User user1 = userService.selectUserByEmail(user.getEmail());
+            return user1.getId();
+        } else {
+            return -1;
+        }
+
     }
 }

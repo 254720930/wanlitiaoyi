@@ -1,16 +1,20 @@
 package com.xcy.pojo;
 
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 
-public class Admin implements Serializable {
+public class User implements Serializable {
+    @ApiModelProperty("用户id，唯一标识")
     private int id;
 
+    @ApiModelProperty("用户电话号码")
     private String phone;
 
+    @ApiModelProperty("用户密码")
     private String password;
 
-    private String verificationcode;
-
+    @ApiModelProperty("用户邮箱")
     private String email;
 
     public int getId() {
@@ -37,14 +41,6 @@ public class Admin implements Serializable {
         this.password = password;
     }
 
-    public String getVerificationcode() {
-        return verificationcode;
-    }
-
-    public void setVerificationcode(String verificationcode) {
-        this.verificationcode = verificationcode;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -55,11 +51,10 @@ public class Admin implements Serializable {
 
     @Override
     public String toString() {
-        return "Admin{" +
+        return "User{" +
                 "id=" + id +
                 ", phone='" + phone + '\'' +
                 ", password='" + password + '\'' +
-                ", verificationcode='" + verificationcode + '\'' +
                 ", email='" + email + '\'' +
                 '}';
     }

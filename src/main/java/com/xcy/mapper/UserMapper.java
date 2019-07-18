@@ -1,22 +1,23 @@
 package com.xcy.mapper;
 
-import com.xcy.pojo.Admin;
+import com.xcy.pojo.User;
 import org.apache.ibatis.annotations.Mapper;
 
 
 @Mapper
-public interface AdminMapper {
+public interface UserMapper {
     /*通过id删除数据*/
     int deleteByPrimaryKey(int id);
 
-    /*添加数据传参为Admin类型的数据*/
-    int insert(Admin record);
-
     /*通过判断里面是否为空进行添加*/
-    int insertSelective(Admin record);
+    int insertSelective(User record);
 
-    int updateByPrimaryKey(Admin record);
+    int updateByPrimaryKey(User record);
 
     /*通过email查询是否有该用户*/
     int validEmail(String email);
+
+    int register(User user);
+
+    User selectUserByEmail(String email);
 }
