@@ -35,7 +35,7 @@ public class UserController {
             return "0";//说明该邮箱已被注册
         } else {
             String yzm = EmailYzmUtils.getYzm();
-            boolean flag = MailUtils.sendMail(email, "你好，你现在正在进行注册邂逅之恋的注册，验证码为" + yzm + "，15分钟内有效。", "邂逅之恋");
+            boolean flag = MailUtils.sendMail(email, "你好，你现在正在进行邂逅之恋的注册，验证码为" + yzm + "，15分钟内有效。", "邂逅之恋");
             if (flag){
                 request.getSession().setAttribute("registerYzm",yzm);
                 return "1";//发送验证码成功
@@ -98,4 +98,19 @@ public class UserController {
         }
 
     }
+
+    @RequestMapping("resetPassword")
+    @ApiOperation("重置密码功能，需要传参 邮箱 密码 反回1表示重置成功,0表示失败")
+    public int resetPassword(String email,String password) throws Exception {
+        User user = new User();
+        user.setEmail(email);
+        user.setPassword(Md5Util.encodeByMd5(password));
+        int isReset = userService.resetPassword(user);
+        if (isReset > 0){
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
 }

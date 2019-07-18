@@ -27,13 +27,7 @@
      insert into user(id,email,password) values (null,#{email},#{password})
   </insert>
 
-  <!--  修改通过id -->
-  <update id="updateByPrimaryKey" parameterType="com.xcy.pojo.User" >
-    update admin
-    set phone = #{phone,jdbcType=VARCHAR},
-      password = #{password,jdbcType=VARCHAR},
-      verificationcode = #{verificationcode,jdbcType=VARCHAR},
-      email = #{email,jdbcType=VARCHAR}
-    where id = #{id}
+  <update id="resetPassword" parameterType="com.xcy.pojo.User">
+    update user set password = #{password} where email = #{email};
   </update>
 </mapper>

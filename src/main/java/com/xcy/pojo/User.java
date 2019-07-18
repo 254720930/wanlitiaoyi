@@ -39,7 +39,6 @@ public class User implements Serializable {
     private String niversitys;
     @ApiModelProperty("职业Id")
     private int occupationId;
-
     @ApiModelProperty("职业")
     private int occupation;
     @ApiModelProperty("年收入")

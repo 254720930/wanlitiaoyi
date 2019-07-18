@@ -16,4 +16,7 @@ public interface UserService {
     User selectUserByEmail(String email);
 
     int login(User user);
+
+    int resetPassword(User user);
+
 }
