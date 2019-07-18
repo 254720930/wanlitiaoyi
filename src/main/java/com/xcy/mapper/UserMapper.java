@@ -20,4 +20,6 @@ public interface UserMapper {
     int register(User user);
 
     User selectUserByEmail(String email);
+
+    int login(User user);
 }

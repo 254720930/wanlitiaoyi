@@ -49,12 +49,28 @@ public class UserController {
     @RequestMapping("register")
     @ApiOperation("注册功能,需要传入的值为邮箱和密码，注册成功返回该用户ID，注册失败返回-1")
     public int register(String email, String password) throws Exception {
-        System.out.println(email + "===============" +password);
         User user = new User();
         user.setEmail(email);
         user.setPassword(Md5Util.encodeByMd5(password));
         int result = userService.register(user);
         if (result > 0){
+            User user1 = userService.selectUserByEmail(user.getEmail());
+            return user1.getId();
+        } else {
+            return -1;
+        }
+
+    }
+
+
+    @RequestMapping("login")
+    @ApiOperation("登录功能,需要传入的值为邮箱和密码，登录成功返回该用户ID，登录失败返回-1")
+    public int login(String email, String password) throws Exception {
+        User user = new User();
+        user.setEmail(email);
+        user.setPassword(Md5Util.encodeByMd5(password));
+        int ifLogin = userService.login(user);
+        if (ifLogin > 0){
             User user1 = userService.selectUserByEmail(user.getEmail());
             return user1.getId();
         } else {

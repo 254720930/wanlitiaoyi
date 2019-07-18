@@ -14,4 +14,6 @@ public interface UserService {
     int register(User admin);
 
     User selectUserByEmail(String email);
+
+    int login(User user);
 }

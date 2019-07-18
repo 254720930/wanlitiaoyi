@@ -12,6 +12,10 @@
         select * from user where email = #{email}
   </select>
 
+  <select id="login" resultType="int">
+    select count(1) from user where email = #{email} and password = #{password};
+  </select>
+
   <!--  通过id删除整行数据  -->
   <delete id="deleteByPrimaryKey" parameterType="int" >
     delete from user
