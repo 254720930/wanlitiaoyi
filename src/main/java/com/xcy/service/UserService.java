@@ -1,5 +1,6 @@
 package com.xcy.service;
 
+import com.xcy.pojo.Dynamic;
 import com.xcy.pojo.User;
 
 import java.util.List;
@@ -24,4 +25,9 @@ public interface UserService {
     List<User> selectMyAttention(int id);
 
     List<User> selectMyFocused(int id);
+
+    User selectUserById(int id);
+
+    List<Dynamic> selectAllDynamic();
+
 }

@@ -1,6 +1,7 @@
 package com.xcy.service.impl;
 
 import com.xcy.mapper.UserMapper;
+import com.xcy.pojo.Dynamic;
 import com.xcy.pojo.User;
 import com.xcy.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,5 +62,15 @@ public class UserServiceImpl implements UserService {
         Integer[] ids = userMapper.selectMyFocused(id);
         List<User> userList = userMapper.selectMyFocusedUser(ids);
         return userList;
+    }
+
+    @Override
+    public User selectUserById(int id) {
+        return userMapper.selectUserById(id);
+    }
+
+    @Override
+    public List<Dynamic> selectAllDynamic() {
+        return userMapper.selectAllDynamic();
     }
 }

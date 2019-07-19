@@ -4,7 +4,7 @@
 
 
   <sql id="selectUser">
-    select u.*,m.marrys from user u left join maryy m where u.marryId = m.id
+    select u.*,m.marrys from user u left join maryy m on u.marryId = m.id
   </sql>
 
   <!-- 通过email检查是否存在-->
@@ -15,7 +15,7 @@
 
   <select id="selectUserByEmail" resultType="com.xcy.pojo.User" parameterType="string">
         <include refid="selectUser" />
-         and u.email = #{email}
+         where u.email = #{email}
   </select>
 
   <select id="login" resultType="int">
@@ -45,6 +45,14 @@
              open="WHERE ID in(" separator="," close=")">
       #{item}
     </foreach>
+  </select>
+  <select id="selectUserById" resultType="com.xcy.pojo.User" parameterType="int">
+    <include refid="selectUser" />
+      where u.id = #{id}
+
+  </select>
+  <select id="selectAllDynamic" resultType="com.xcy.pojo.Dynamic">
+    select u.username,u.headportrait,d.* from dynamiccondition d left join user u on d.userId = u.id
   </select>
 
   <!--  通过id删除整行数据  -->

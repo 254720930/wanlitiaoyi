@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xcy.mapper.HotlistMapper" >
+    
+    <select id="selectAllHotlist" resultType="com.xcy.pojo.Hotlist">
+        select h2.*,user.headportrait,user.username from
+        (select h.*,u.userId from hotlistanduser u
+        left join hotlist h
+        on u.hotlistId = h.id) h2
+        left join user on h2.userId = user.id
+    </select>
+</mapper>

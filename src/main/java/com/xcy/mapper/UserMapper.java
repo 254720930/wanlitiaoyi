@@ -1,5 +1,6 @@
 package com.xcy.mapper;
 
+import com.xcy.pojo.Dynamic;
 import com.xcy.pojo.User;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -29,4 +30,9 @@ public interface UserMapper {
     Integer[] selectMyFocused(int id);
 
     List<User> selectMyFocusedUser(Integer[] ids);
+
+    User selectUserById(int id);
+
+    List<Dynamic> selectAllDynamic();
+
 }
