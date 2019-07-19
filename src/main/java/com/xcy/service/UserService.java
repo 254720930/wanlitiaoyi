@@ -30,4 +30,5 @@ public interface UserService {
 
     List<Dynamic> selectAllDynamic();
 
+    int apply(int userId, int hotlistId);
 }

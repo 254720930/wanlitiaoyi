@@ -2,11 +2,13 @@ package com.xcy.service.impl;
 
 import com.xcy.mapper.UserMapper;
 import com.xcy.pojo.Dynamic;
+import com.xcy.pojo.Hotlist;
 import com.xcy.pojo.User;
 import com.xcy.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.beans.Transient;
 import java.util.List;
 
 
@@ -72,5 +74,21 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<Dynamic> selectAllDynamic() {
         return userMapper.selectAllDynamic();
+    }
+
+    @Override
+    @Transient
+    public int apply(int userId, int hotlistId) {
+        int isApply = userMapper.apply(userId, hotlistId);
+        if (isApply > 0){
+            int addApplyNum = userMapper.updateApplyNum(hotlistId);
+            if (addApplyNum > 0){
+                return 1;
+            } else {
+                return 0;
+            }
+        } else {
+            return 0;
+        }
     }
 }

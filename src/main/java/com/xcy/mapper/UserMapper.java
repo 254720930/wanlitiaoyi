@@ -35,4 +35,8 @@ public interface UserMapper {
 
     List<Dynamic> selectAllDynamic();
 
+    int apply(int userId, int hotlistId);
+
+    int updateApplyNum(int hotlistId);
+
 }
