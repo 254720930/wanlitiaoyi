@@ -4,7 +4,7 @@
 
 
   <sql id="selectUser">
-    select u.*,m.marrys from user u left join maryy m on u.marryId = m.id
+    select * from
   </sql>
 
   <!-- 通过email检查是否存在-->
@@ -70,14 +70,14 @@
   <select id="myNotReadUserMessage" resultType="com.xcy.pojo.Information" parameterType="int">
     select * from information where recipients > 0 and addresser = #{addresser} and status = 0
   </select>
-  <!--  通过id删除整行数据  -->
-  <delete id="deleteByPrimaryKey" parameterType="int" >
-    delete from user
-    where id = #{id}
-  </delete>
 
 
-  <insert id="register" parameterType="com.xcy.pojo.User">
+    <delete id="deleteDynamic">
+        delete from dynamiccondition where id = #{id}
+    </delete>
+
+
+    <insert id="register" parameterType="com.xcy.pojo.User">
      insert into user(id,email,password) values (null,#{email},#{password})
   </insert>
 
@@ -98,5 +98,66 @@
 
   <update id="readMessage" parameterType="int">
     update information set status = 1 where id = #{id}
+  </update>
+
+  <update id="updateUserInfo" parameterType="com.xcy.pojo.User">
+    update user
+    <trim prefix="set" suffixOverrides=",">
+    <if test="#{headportrait} != null">
+        headportrait = #{headportrait},
+    </if>
+    <if test="#{username} != null">
+      username = #{username},
+    </if>
+    <if test="#{sex} != null">
+      sex = #{sex},
+    </if>
+    <if test="#{age} != null">
+      age = #{age},
+    </if>
+    <if test="#{heights} != null">
+      heights = #{heights},
+    </if>
+    <if test="#{weights} != null">
+      weights = #{weights},
+    </if>
+    <if test="#{constellation} != null">
+      constellation = #{constellation},
+    </if>
+    <if test="#{blood} != null">
+      blood = #{blood},
+    </if>
+    <if test="#{nation} != null">
+      nation = #{nation},
+    </if>
+    <if test="#{eduinfo} != null">
+      eduinfo = #{eduinfo},
+    </if>
+    <if test="#{job} != null">
+      job = #{job},
+    </if>
+    <if test="#{income} != null">
+      income = #{income},
+    </if>
+    <if test="#{address} != null">
+      address = #{address},
+    </if>
+    <if test="#{marry} != null">
+      marry = #{marry},
+    </if>
+    <if test="#{characters} != null">
+      characters = #{characters},
+    </if>
+    <if test="#{monologue} != null">
+      monologue = #{monologue},
+    </if>
+    <if test="#{hobbies} != null">
+      hobbies = #{hobbies},
+    </if>
+      <if test="#{house} != null">
+        house = #{house},
+      </if>
+  </trim>
+    where id = #{id}
   </update>
 </mapper>

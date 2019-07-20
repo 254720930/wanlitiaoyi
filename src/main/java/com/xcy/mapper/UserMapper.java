@@ -51,4 +51,8 @@ public interface UserMapper {
     List<Information> myNotReadUserMessage(int addresser);
 
     int readMessage(int id);
+
+    int deleteDynamic(int id);
+
+    int updateUserInfo(User user);
 }

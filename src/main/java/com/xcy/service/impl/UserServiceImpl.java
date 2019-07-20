@@ -123,4 +123,14 @@ public class UserServiceImpl implements UserService {
         return userMapper.readMessage(id);
     }
 
+    @Override
+    public int deleteDynamic(int id) {
+        return userMapper.deleteDynamic(id);
+    }
+
+    @Override
+    public int updateUserInfo(User user) {
+        return userMapper.updateUserInfo(user);
+    }
+
 }

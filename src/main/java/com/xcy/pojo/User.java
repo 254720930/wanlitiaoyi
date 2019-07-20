@@ -20,43 +20,37 @@ public class User implements Serializable {
     @ApiModelProperty("性别")
     private String sex;
     @ApiModelProperty("年龄")
-    private String age;
+    private int age;
     @ApiModelProperty("身高")
-    private String height;
+    private String heights;
     @ApiModelProperty("体重")
-    private String weight;
+    private String weights;
     @ApiModelProperty("星座")
     private String constellation;
     @ApiModelProperty("血型")
-    private String bloodtype;
+    private String blood;
     @ApiModelProperty("民族")
     private String nation;
     @ApiModelProperty("学历")
     private String niversitys;
-    @ApiModelProperty("职业Id")
-    private int occupationId;
     @ApiModelProperty("职业")
-    private int occupation;
+    private String job;
     @ApiModelProperty("年收入")
-    private String incomes;
+    private String income;
     @ApiModelProperty("地址")
-    private String addressss;
-    @ApiModelProperty("婚况ID")
-    private int marryId;
+    private String address;
     @ApiModelProperty("婚况状况")
-    private int marrys;
+    private String marry;
     @ApiModelProperty("性格")
     private String characters;
     @ApiModelProperty("独白")
     private String monologue;
     @ApiModelProperty("兴趣爱好")
-    private String interest;
+    private String hobbies;
     @ApiModelProperty("身份证正面")
     private String cardz;
     @ApiModelProperty("身份证反面")
     private String cardf;
-
-
 
     public int getId() {
         return id;
@@ -114,28 +108,28 @@ public class User implements Serializable {
         this.sex = sex;
     }
 
-    public String getAge() {
+    public int getAge() {
         return age;
     }
 
-    public void setAge(String age) {
+    public void setAge(int age) {
         this.age = age;
     }
 
-    public String getHeight() {
-        return height;
+    public String getHeights() {
+        return heights;
     }
 
-    public void setHeight(String height) {
-        this.height = height;
+    public void setHeights(String heights) {
+        this.heights = heights;
     }
 
-    public String getWeight() {
-        return weight;
+    public String getWeights() {
+        return weights;
     }
 
-    public void setWeight(String weight) {
-        this.weight = weight;
+    public void setWeights(String weights) {
+        this.weights = weights;
     }
 
     public String getConstellation() {
@@ -146,12 +140,12 @@ public class User implements Serializable {
         this.constellation = constellation;
     }
 
-    public String getBloodtype() {
-        return bloodtype;
+    public String getBlood() {
+        return blood;
     }
 
-    public void setBloodtype(String bloodtype) {
-        this.bloodtype = bloodtype;
+    public void setBlood(String blood) {
+        this.blood = blood;
     }
 
     public String getNation() {
@@ -170,52 +164,36 @@ public class User implements Serializable {
         this.niversitys = niversitys;
     }
 
-    public int getOccupationId() {
-        return occupationId;
+    public String getJob() {
+        return job;
     }
 
-    public void setOccupationId(int occupationId) {
-        this.occupationId = occupationId;
+    public void setJob(String job) {
+        this.job = job;
     }
 
-    public int getOccupation() {
-        return occupation;
+    public String getIncome() {
+        return income;
     }
 
-    public void setOccupation(int occupation) {
-        this.occupation = occupation;
+    public void setIncome(String income) {
+        this.income = income;
     }
 
-    public String getIncomes() {
-        return incomes;
+    public String getAddress() {
+        return address;
     }
 
-    public void setIncomes(String incomes) {
-        this.incomes = incomes;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
-    public String getAddressss() {
-        return addressss;
+    public String getMarry() {
+        return marry;
     }
 
-    public void setAddressss(String addressss) {
-        this.addressss = addressss;
-    }
-
-    public int getMarryId() {
-        return marryId;
-    }
-
-    public void setMarryId(int marryId) {
-        this.marryId = marryId;
-    }
-
-    public int getMarrys() {
-        return marrys;
-    }
-
-    public void setMarrys(int marrys) {
-        this.marrys = marrys;
+    public void setMarry(String marry) {
+        this.marry = marry;
     }
 
     public String getCharacters() {
@@ -234,12 +212,12 @@ public class User implements Serializable {
         this.monologue = monologue;
     }
 
-    public String getInterest() {
-        return interest;
+    public String getHobbies() {
+        return hobbies;
     }
 
-    public void setInterest(String interest) {
-        this.interest = interest;
+    public void setHobbies(String hobbies) {
+        this.hobbies = hobbies;
     }
 
     public String getCardz() {
@@ -268,24 +246,23 @@ public class User implements Serializable {
                 ", headportrait='" + headportrait + '\'' +
                 ", username='" + username + '\'' +
                 ", sex='" + sex + '\'' +
-                ", age='" + age + '\'' +
-                ", height='" + height + '\'' +
-                ", weight='" + weight + '\'' +
+                ", age=" + age +
+                ", heights='" + heights + '\'' +
+                ", weights='" + weights + '\'' +
                 ", constellation='" + constellation + '\'' +
-                ", bloodtype='" + bloodtype + '\'' +
+                ", blood='" + blood + '\'' +
                 ", nation='" + nation + '\'' +
                 ", niversitys='" + niversitys + '\'' +
-                ", occupationId=" + occupationId +
-                ", occupation=" + occupation +
-                ", incomes='" + incomes + '\'' +
-                ", addressss='" + addressss + '\'' +
-                ", marryId=" + marryId +
-                ", marrys=" + marrys +
+                ", job='" + job + '\'' +
+                ", income='" + income + '\'' +
+                ", address='" + address + '\'' +
+                ", marry='" + marry + '\'' +
                 ", characters='" + characters + '\'' +
                 ", monologue='" + monologue + '\'' +
-                ", interest='" + interest + '\'' +
+                ", hobbies='" + hobbies + '\'' +
                 ", cardz='" + cardz + '\'' +
                 ", cardf='" + cardf + '\'' +
                 '}';
     }
+
 }
