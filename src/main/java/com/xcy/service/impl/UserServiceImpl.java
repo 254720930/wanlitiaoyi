@@ -3,6 +3,7 @@ package com.xcy.service.impl;
 import com.xcy.mapper.UserMapper;
 import com.xcy.pojo.Dynamic;
 import com.xcy.pojo.Hotlist;
+import com.xcy.pojo.Information;
 import com.xcy.pojo.User;
 import com.xcy.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,4 +92,35 @@ public class UserServiceImpl implements UserService {
             return 0;
         }
     }
+
+    @Override
+    public int sendMessage(Information information) {
+        return userMapper.sendMessage(information);
+    }
+
+    @Override
+    public List<Information> myNotReadSystemMessage(int addresser) {
+        return userMapper.myNotReadSystemMessage(addresser);
+    }
+
+    @Override
+    public List<Information> myReadSystemMessage(int addresser) {
+        return userMapper.myReadSystemMessage(addresser);
+    }
+
+    @Override
+    public List<Information> myReadUserMessage(int addresser) {
+        return userMapper.myReadUserMessage(addresser);
+    }
+
+    @Override
+    public List<Information> myNotReadUserMessage(int addresser) {
+        return userMapper.myNotReadUserMessage(addresser);
+    }
+
+    @Override
+    public int readMessage(int id) {
+        return userMapper.readMessage(id);
+    }
+
 }

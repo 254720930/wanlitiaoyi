@@ -2,13 +2,12 @@ package com.xcy.controller;
 
 import com.xcy.pojo.Dynamic;
 import com.xcy.pojo.Hotlist;
+import com.xcy.pojo.Information;
 import com.xcy.pojo.User;
 import com.xcy.service.DynamicService;
 import com.xcy.service.HotlistService;
 import com.xcy.service.UserService;
-import com.xcy.utils.EmailYzmUtils;
-import com.xcy.utils.MailUtils;
-import com.xcy.utils.Md5Util;
+import com.xcy.utils.*;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
@@ -18,10 +17,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import redis.clients.jedis.Jedis;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -46,11 +47,13 @@ public class UserController {
     HotlistService hotlistService;
     @Autowired
     DynamicService dynamicService;
+    @Autowired
+    JedisClient jedisClient;
 
 
     @RequestMapping("validEmail")
     @ApiOperation("检查email是否存在，如果不存在，发送验证码，返回值0代表邮箱已被注册，1代表发送成功,-1代表发送验证码失败")
-    public String validEmail(String email, HttpServletRequest request,HttpServletResponse response){
+    public String validEmail(String email,HttpServletResponse response){
         response.setHeader("Access-Control-Allow-Origin", "*");
 
         int result = userService.validEmail(email);
@@ -60,7 +63,8 @@ public class UserController {
             String yzm = EmailYzmUtils.getYzm();
             boolean flag = MailUtils.sendMail(email, "你好，你现在正在进行邂逅之恋的注册，验证码为" + yzm + "，15分钟内有效。", "邂逅之恋");
             if (flag){
-                request.getSession().setAttribute("registerYzm",yzm);
+                jedisClient.set(email,yzm);
+                System.out.println(jedisClient.get(email)+"2222222222222");
                 return "1";//发送验证码成功
             } else {
                 return "-1";//发送验证码失败
@@ -99,7 +103,7 @@ public class UserController {
             String yzm = EmailYzmUtils.getYzm();
             boolean flag = MailUtils.sendMail(email, "你好，你现在正在进行邂逅之恋的密码找回，验证码为" + yzm + "，15分钟内有效。", "邂逅之恋");
             if (flag){
-                request.getSession().setAttribute(email,yzm);
+                jedisClient.set(email,yzm);
                 return 1;//发送验证码成功
             } else {
                 return 0;//发送验证码失败
@@ -115,7 +119,8 @@ public class UserController {
     public int register(String email,HttpServletResponse response, String password,String yzm,HttpServletRequest request) throws Exception {
         response.setHeader("Access-Control-Allow-Origin", "*");
 
-        Object registerYzm = request.getSession().getAttribute(email);
+        String registerYzm = jedisClient.get(email);
+
         boolean equals = registerYzm.equals(yzm);
         if (equals){
             User user = new User();
@@ -154,7 +159,7 @@ public class UserController {
 
     @RequestMapping("resetPassword")
     @ApiOperation("重置密码功能，需要传参 邮箱 密码 反回1表示重置成功,0表示失败")
-    public int resetPassword(String email,String password,HttpServletResponse response, String yzm,HttpServletRequest request) throws Exception {
+    public int resetPassword(String email,String password,HttpServletResponse response,HttpServletRequest request) throws Exception {
         response.setHeader("Access-Control-Allow-Origin", "*");
 
         User user = new User();
@@ -171,10 +176,10 @@ public class UserController {
 
     @RequestMapping("vaildYzm")
     @ApiOperation("检验验证码是否正确，需要传参 邮箱 验证码， 成功则返回邮箱，不成功返回fail")
-    public String vaildYzm(String email,String password,HttpServletResponse response, String yzm,HttpServletRequest request) throws Exception {
+    public String vaildYzm(String email,HttpServletResponse response, String yzm,HttpServletRequest request) throws Exception {
         response.setHeader("Access-Control-Allow-Origin", "*");
 
-        Object registerYzm = request.getSession().getAttribute("registerYzm");
+        String registerYzm = jedisClient.get(email);
         boolean equals = registerYzm.equals(yzm);
         if (equals) {
             return email;
@@ -239,7 +244,8 @@ public class UserController {
 
         System.out.println(fileName);
         //2.获取文件路径
-        ServletContext context = request.getServletContext(); String basePath = context.getRealPath("/uploads");
+        ServletContext context = request.getServletContext();
+        String basePath = context.getRealPath("/uploads");
         //3.解决同一文件夹中文件过多问题
         String datePath = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
         //4.判断路径是否存在
@@ -249,9 +255,9 @@ public class UserController {
         }
         //5.使用 MulitpartFile 接口中方法，把上传的文件写到指定位置
         uploadFile.transferTo(new File(file,fileName));
-
+        String DynamicImgUrl = "10.8.157.63:8081/images/"+file+fileName;
         Dynamic dynamic = new Dynamic();
-        dynamic.setDynamicImgUrl(fileName);
+        dynamic.setDynamicImgUrl(DynamicImgUrl);
         dynamic.setDynamiccontent(dynamiccontent);
         dynamic.setUserId(userId);
 
@@ -262,5 +268,60 @@ public class UserController {
             return "发布失败";
         }
     }
+
+
+    @RequestMapping("sendMessage")
+    @ApiOperation("发送信息,需要传参:1发送人的ID,2收件人的ID，3发送的内容;返回1表示发送成功，0表示失败")
+    public int sendMessage(Information information ,HttpServletResponse response){
+        response.setHeader("Access-Control-Allow-Origin", "*");
+
+        return userService.sendMessage(information);
+    }
+
+    @RequestMapping("myNotReadSystemMessage")
+    @ApiOperation("我的未读系统消息，传参：收件人ID，返回系统发送的未读消息")
+    public List<Information> myNotReadSystemMessage(int addresser,HttpServletResponse response){
+        response.setHeader("Access-Control-Allow-Origin", "*");
+
+        return userService.myNotReadSystemMessage(addresser);
+    }
+
+    @RequestMapping("myReadSystemMessage")
+    @ApiOperation("我的已读系统消息，传参：收件人ID，返回系统发送的已读消息")
+    public List<Information> myReadSystemMessage(int addresser,HttpServletResponse response){
+        response.setHeader("Access-Control-Allow-Origin", "*");
+
+        return userService.myReadSystemMessage(addresser);
+    }
+
+    @RequestMapping("myReadUserMessage")
+    @ApiOperation("我的已读用户消息，传参：收件人ID，返回用户发送的已读消息")
+    public List<Information> myReadUserMessage(int addresser,HttpServletResponse response){
+        response.setHeader("Access-Control-Allow-Origin", "*");
+
+        return userService.myReadUserMessage(addresser);
+    }
+
+    @RequestMapping("myNotReadUserMessage")
+    @ApiOperation("我的未读用户消息，传参：收件人ID，返回系统发送的未读消息")
+    public List<Information> myNotReadUserMessage(int addresser,HttpServletResponse response){
+        response.setHeader("Access-Control-Allow-Origin", "*");
+
+        return userService.myNotReadUserMessage(addresser);
+    }
+
+    @RequestMapping("readMessage")
+    @ApiOperation("读取信息功能,传入读取的信息ID，返回1表示已读状态，0表示读取失败")
+    public int readMessage(int id,HttpServletResponse response){
+        response.setHeader("Access-Control-Allow-Origin", "*");
+
+        return userService.readMessage(id);
+    }
+
+
+
+
+
+
 
 }

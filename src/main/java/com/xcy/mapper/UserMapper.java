@@ -1,6 +1,7 @@
 package com.xcy.mapper;
 
 import com.xcy.pojo.Dynamic;
+import com.xcy.pojo.Information;
 import com.xcy.pojo.User;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -39,4 +40,15 @@ public interface UserMapper {
 
     int updateApplyNum(int hotlistId);
 
+    int sendMessage(Information information);
+
+    List<Information> myNotReadSystemMessage(int addresser);
+
+    List<Information> myReadSystemMessage(int addresser);
+
+    List<Information> myReadUserMessage(int addresser);
+
+    List<Information> myNotReadUserMessage(int addresser);
+
+    int readMessage(int id);
 }

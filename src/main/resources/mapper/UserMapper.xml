@@ -55,6 +55,21 @@
     select u.username,u.headportrait,d.* from dynamiccondition d left join user u on d.userId = u.id
   </select>
 
+  <select id="myNotReadSystemMessage" resultType="com.xcy.pojo.Information" parameterType="int">
+    select * from information where recipients = 0 and addresser = #{addresser} and status = 0
+  </select>
+
+  <select id="myReadSystemMessage" resultType="com.xcy.pojo.Information" parameterType="int">
+    select * from information where recipients = 0 and addresser = #{addresser} and status = 1
+  </select>
+
+  <select id="myReadUserMessage" resultType="com.xcy.pojo.Information" parameterType="int">
+    select * from information where recipients > 0 and addresser = #{addresser} and status = 1
+  </select>
+
+  <select id="myNotReadUserMessage" resultType="com.xcy.pojo.Information" parameterType="int">
+    select * from information where recipients > 0 and addresser = #{addresser} and status = 0
+  </select>
   <!--  通过id删除整行数据  -->
   <delete id="deleteByPrimaryKey" parameterType="int" >
     delete from user
@@ -69,6 +84,9 @@
   <insert id="apply" parameterType="int">
     insert into hotlistanduser(userId,hotlistId,role) value(#{userId},#{hotlistId},0)
   </insert>
+    <insert id="sendMessage" parameterType="com.xcy.pojo.Information">
+        insert into information(recipients,addresser,content,sendTime,status) value (#{recipients},#{addresser},#{content},now(),0)
+    </insert>
 
   <update id="resetPassword" parameterType="com.xcy.pojo.User">
     update user set password = #{password} where email = #{email};
@@ -76,5 +94,9 @@
 
   <update id="updateApplyNum" parameterType="int">
     update hotlist set usernum = usernum + 1 where id = #{hoslistId} and sumuser > usernum
+  </update>
+
+  <update id="readMessage" parameterType="int">
+    update information set status = 1 where id = #{id}
   </update>
 </mapper>
