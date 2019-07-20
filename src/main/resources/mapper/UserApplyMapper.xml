@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xcy.mapper.UserApplyMapper" >
+
+<select id="selectUserApply"  resultType="com.xcy.pojo.User">
+--     SELECT u.*,m.marrys,o.occupation, m.id AS mid ,o.id AS oid from USER u left JOIN maryy m
+--     ON u.marryId = m.mid
+--       LEFT  JOIN occupation o ON u.occupationId = o.oid
+--
+--
+--        SELECT u.*,m.marrys,  m.id AS mid  from USER u left JOIN maryy m
+--     ON u.marryId = m.mid
+ SELECT u.*,m.marrys,o.occupation    from USER u left JOIN maryy m
+    ON u.marry = m.id  LEFT  JOIN occupation o ON u.job = o.id
+
+</select>
+<insert id="insertUserApply" parameterType= "com.xcy.pojo.User">
+    INSERT INTO USER (id,username,sex,age,email,marryId,addressss,occupationId,height,weight,incomes,headportrait)
+    VALUES (NULL ,#{username},#{sex},#{age},#{email},#{marryId},#{addressss},#{occupationId}, #{height},
+    #{weight},#{incomes},#{headportrait})
+</insert>
+
+</mapper>
