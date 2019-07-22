@@ -1,9 +1,48 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.xcy.mapper.DynamicMapper" >
-
+    <sql id="sql1">
+        select d.*,u.headportrait,u.username from dynamiccondition d left join user u on d.userId = u.id
+    </sql>
 
     <insert id="addDynamic" parameterType="com.xcy.pojo.Dynamic">
-        insert into dynamiccondition values (null,now(),#{dynamiccontent},#{dynamicImgUrl},#{userId})
+        insert into dynamiccondition values (null,now(),#{dynamiccontent},#{dynamicImgUrl},#{userId},0)
     </insert>
+    <update id="updateDynamic" parameterType="com.xcy.pojo.Dynamic">
+        update dynamiccondition
+        <trim prefix="set" suffixOverrides=",">
+        <if test="#{dynamiccontent} != null">
+            dynamiccontent = #{dynamiccontent},
+        </if>
+            <if test="#{dynamicImgUrl} != null">
+                dynamicImgUrl = #{dynamicImgUrl},
+            </if>
+            dynamicTime = now(),
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="upDynamic" parameterType="int">
+        update dynamiccondition set upcode = 1 where id = #{id}
+    </update>
+    <update id="downDynamic" parameterType="com.xcy.pojo.Dynamic">
+        update dynamiccondition set upcode = 0 where id = #{id}
+    </update>
+
+    <delete id="deleteDynamic" parameterType="int">
+        delete from dynamiccondition where id = #{id}
+    </delete>
+    <select id="selectAllDynamic" resultType="com.xcy.pojo.Dynamic">
+        <include refid="sql1"></include>
+    </select>
+
+    <select id="selectOldUpDynamic" resultType="com.xcy.pojo.Dynamic" parameterType="int">
+        <include refid="sql1"></include>
+         where d.userId = #{userId} and d.upcode = 1;
+    </select>
+
+    <select id="selectAllDynamicById" resultType="com.xcy.pojo.Dynamic" parameterType="int">
+        <include refid="sql1"></include>
+         where d.userId = #{userId} order by d.upcode desc;
+    </select>
 </mapper>

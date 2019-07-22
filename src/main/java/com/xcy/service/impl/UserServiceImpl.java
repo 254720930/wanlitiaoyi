@@ -1,9 +1,8 @@
 package com.xcy.service.impl;
 
 import com.xcy.mapper.UserMapper;
-import com.xcy.pojo.Dynamic;
-import com.xcy.pojo.Hotlist;
 import com.xcy.pojo.Information;
+import com.xcy.pojo.Mate;
 import com.xcy.pojo.User;
 import com.xcy.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,10 +71,6 @@ public class UserServiceImpl implements UserService {
         return userMapper.selectUserById(id);
     }
 
-    @Override
-    public List<Dynamic> selectAllDynamic() {
-        return userMapper.selectAllDynamic();
-    }
 
     @Override
     @Transient
@@ -124,13 +119,28 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int deleteDynamic(int id) {
-        return userMapper.deleteDynamic(id);
+    public int updateUserInfo(User user) {
+        return userMapper.updateUserInfo(user);
     }
 
     @Override
-    public int updateUserInfo(User user) {
-        return userMapper.updateUserInfo(user);
+    public Mate selectMyMateById(int id) {
+        return userMapper.selectMyMateById(id);
+    }
+
+    @Override
+    public int updateUserMate(Mate mate) {
+        return userMapper.updateUserMate(mate);
+    }
+
+    @Override
+    public int addUserMate(Mate mate) {
+        return userMapper.addUserMate(mate);
+    }
+
+    @Override
+    public List<User> selectUserByMate(Mate mate) {
+        return userMapper.selectUserByMate(mate);
     }
 
 }

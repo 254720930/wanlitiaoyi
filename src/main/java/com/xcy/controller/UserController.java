@@ -1,9 +1,6 @@
 package com.xcy.controller;
 
-import com.xcy.pojo.Dynamic;
-import com.xcy.pojo.Hotlist;
-import com.xcy.pojo.Information;
-import com.xcy.pojo.User;
+import com.xcy.pojo.*;
 import com.xcy.service.DynamicService;
 import com.xcy.service.HotlistService;
 import com.xcy.service.UserService;
@@ -15,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -36,7 +32,7 @@ import java.util.UUID;
  */
 
 @RestController
-@RequestMapping(value = "user",method = RequestMethod.POST)
+@RequestMapping(value = "user",method = {RequestMethod.GET,RequestMethod.POST})
 public class UserController {
 
     @Autowired
@@ -221,47 +217,57 @@ public class UserController {
     }
 
 
-
     @RequestMapping("showDynamic")
     @ApiOperation("展示所有动态")
     public List<Dynamic> showDynamic(HttpServletResponse response){
         response.setHeader("Access-Control-Allow-Origin", "*");
 
-        return userService.selectAllDynamic();
+        return dynamicService.selectAllDynamic();
+    }
+
+    @RequestMapping("showDynamicById")
+    @ApiOperation("展示当前用户的所有动态")
+    public List<Dynamic> showDynamicById(int id,HttpServletResponse response){
+        response.setHeader("Access-Control-Allow-Origin", "*");
+
+        return dynamicService.selectAllDynamicById(id);
     }
 
     @RequestMapping("addDynamic")
     @ApiOperation("添加动态，需要数据：登录用户的ID，动态上传的图片，动态上传的内容.发布成功返回发布成功，失败返回发布失败")
     public String addDynamic(int userId, String dynamiccontent, HttpServletResponse response, MultipartFile uploadFile, HttpServletRequest request) throws IOException {
         response.setHeader("Access-Control-Allow-Origin", "*");
-
-        //定义文件名
-        String fileName = "";
-        //1.获取原始文件名
-        String uploadFileName = uploadFile.getOriginalFilename();
-        //2.截取文件扩展名
-        String	extendName	= uploadFileName.substring(uploadFileName.lastIndexOf(".")+1, uploadFileName.length());
-        //3.把文件加上随机数，防止文件重复
-        String uuid = UUID.randomUUID().toString().replace("-", "").toUpperCase();
-
-        fileName = uuid+"."+extendName;
-
-        System.out.println(fileName);
-        //2.获取文件路径
-        ServletContext context = request.getServletContext();
-        String basePath = context.getRealPath("/uploads");
-        //3.解决同一文件夹中文件过多问题
-        String datePath = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-        //4.判断路径是否存在
-        File file = new File(image_dir + "/" + datePath);
-        if(!file.exists()) {
-            file.mkdirs();
-        }
-        //5.使用 MulitpartFile 接口中方法，把上传的文件写到指定位置
-        uploadFile.transferTo(new File(file,fileName));
-        String DynamicImgUrl = image_url+datePath + "/" +fileName;
         Dynamic dynamic = new Dynamic();
-        dynamic.setDynamicImgUrl(DynamicImgUrl);
+        //定义文件名
+
+        //1.获取原始文件名
+        if (uploadFile != null){
+            String fileName = "";
+            String uploadFileName = uploadFile.getOriginalFilename();
+            //2.截取文件扩展名
+            String	extendName	= uploadFileName.substring(uploadFileName.lastIndexOf(".")+1, uploadFileName.length());
+            //3.把文件加上随机数，防止文件重复
+            String uuid = UUID.randomUUID().toString().replace("-", "").toUpperCase();
+
+            fileName = uuid+"."+extendName;
+
+            System.out.println(fileName);
+            //2.获取文件路径
+            ServletContext context = request.getServletContext();
+            String basePath = context.getRealPath("/uploads");
+            //3.解决同一文件夹中文件过多问题
+            String datePath = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+            //4.判断路径是否存在
+            File file = new File(image_dir + "/" + datePath);
+            if(!file.exists()) {
+                file.mkdirs();
+            }
+            //5.使用 MulitpartFile 接口中方法，把上传的文件写到指定位置
+            uploadFile.transferTo(new File(file,fileName));
+            String DynamicImgUrl = image_url+datePath + "/" +fileName;
+
+            dynamic.setDynamicImgUrl(DynamicImgUrl);
+        }
         dynamic.setDynamiccontent(dynamiccontent);
         dynamic.setUserId(userId);
 
@@ -273,6 +279,58 @@ public class UserController {
         }
     }
 
+    @RequestMapping("upDynamic")
+    @ApiOperation("动态置顶，需要传参，需要置顶动态的id值，用户的userId，成功返回1，失败返回0")
+    public int upDynamic(int id,HttpServletResponse response,int userId){
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        return dynamicService.upDynamic(id,userId);
+
+    }
+
+    @RequestMapping("updateDynamic")
+    @ApiOperation("修改动态，需要数据：需要修改的动态的ID，修改成功返回修改成功，失败返回修改失败")
+    public String updateDynamic(int id, String dynamiccontent, HttpServletResponse response, MultipartFile uploadFile, HttpServletRequest request) throws IOException {
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        Dynamic dynamic = new Dynamic();
+        //定义文件名
+
+        //1.获取原始文件名
+        if (uploadFile != null){
+            String fileName = "";
+            String uploadFileName = uploadFile.getOriginalFilename();
+            //2.截取文件扩展名
+            String	extendName	= uploadFileName.substring(uploadFileName.lastIndexOf(".")+1, uploadFileName.length());
+            //3.把文件加上随机数，防止文件重复
+            String uuid = UUID.randomUUID().toString().replace("-", "").toUpperCase();
+
+            fileName = uuid+"."+extendName;
+
+            System.out.println(fileName);
+            //2.获取文件路径
+            ServletContext context = request.getServletContext();
+            String basePath = context.getRealPath("/uploads");
+            //3.解决同一文件夹中文件过多问题
+            String datePath = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+            //4.判断路径是否存在
+            File file = new File(image_dir + "/" + datePath);
+            if(!file.exists()) {
+                file.mkdirs();
+            }
+            //5.使用 MulitpartFile 接口中方法，把上传的文件写到指定位置
+            uploadFile.transferTo(new File(file,fileName));
+            String DynamicImgUrl = image_url+datePath + "/" +fileName;
+
+            dynamic.setDynamicImgUrl(DynamicImgUrl);
+        }
+        dynamic.setDynamiccontent(dynamiccontent);
+        dynamic.setId(id);
+        int result = dynamicService.updateDynamic(dynamic);
+        if (result > 0){
+            return "修改成功";
+        } else {
+            return "修改失败";
+        }
+    }
 
     @RequestMapping("sendMessage")
     @ApiOperation("发送信息,需要传参:1发送人的ID,2收件人的ID，3发送的内容;返回1表示发送成功，0表示失败")
@@ -322,21 +380,12 @@ public class UserController {
         return userService.readMessage(id);
     }
 
-    @RequestMapping(value = "uploadFile", method = RequestMethod.POST)
-    @ApiOperation("formdata格式上传图片，需要传入图片")
-    public String uploadFile(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
-        response.setHeader("Access-Control-Allow-Origin", "*");
-        MultipartHttpServletRequest multipartRequest=(MultipartHttpServletRequest) request;
-        MultipartFile multipartFile = multipartRequest.getFile("file1");//file是form-data中二进制字段对应的name
-        System.out.println(multipartFile.getSize());
-        return "1";
-    }
 
     @RequestMapping("deleteDynamic")
     @ApiOperation("删除动态，传参动态的ID值，删除成功返回1，失败返回0")
     public int deleteDynamic(int id,HttpServletResponse response){
         response.setHeader("Access-Control-Allow-Origin", "*");
-        return userService.deleteDynamic(id);
+        return dynamicService.deleteDynamic(id);
     }
 
     @RequestMapping("updateUserInfo")
@@ -344,34 +393,59 @@ public class UserController {
     public int updateUserInfo(User user,HttpServletRequest request,HttpServletResponse response,MultipartFile uploadFile) throws IOException {
         response.setHeader("Access-Control-Allow-Origin", "*");
 
+            if (uploadFile != null) {
+                String fileName = "";
+                //1.获取原始文件名
+                String uploadFileName = uploadFile.getOriginalFilename();
+                //2.截取文件扩展名
+                String extendName = uploadFileName.substring(uploadFileName.lastIndexOf(".") + 1, uploadFileName.length());
+                //3.把文件加上随机数，防止文件重复
+                String uuid = UUID.randomUUID().toString().replace("-", "").toUpperCase();
 
-        //定义文件名
-        String fileName = "";
-        //1.获取原始文件名
-        String uploadFileName = uploadFile.getOriginalFilename();
-        //2.截取文件扩展名
-        String	extendName	= uploadFileName.substring(uploadFileName.lastIndexOf(".")+1, uploadFileName.length());
-        //3.把文件加上随机数，防止文件重复
-        String uuid = UUID.randomUUID().toString().replace("-", "").toUpperCase();
+                fileName = uuid + "." + extendName;
 
-        fileName = uuid+"."+extendName;
+                System.out.println(fileName);
+                //2.获取文件路径
+                ServletContext context = request.getServletContext();
+                String basePath = context.getRealPath("/uploads");
+                //3.解决同一文件夹中文件过多问题
+                String datePath = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+                //4.判断路径是否存在
+                File file = new File(image_dir + "/" + datePath);
+                if (!file.exists()) {
+                    file.mkdirs();
+                }
+                //5.使用 MulitpartFile 接口中方法，把上传的文件写到指定位置
+                uploadFile.transferTo(new File(file, fileName));
+                user.setHeadportrait(image_url + datePath + "/" + fileName);
+            }
 
-        System.out.println(fileName);
-        //2.获取文件路径
-        ServletContext context = request.getServletContext();
-        String basePath = context.getRealPath("/uploads");
-        //3.解决同一文件夹中文件过多问题
-        String datePath = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-        //4.判断路径是否存在
-        File file = new File(image_dir + "/" + datePath);
-        if(!file.exists()) {
-            file.mkdirs();
-        }
-        //5.使用 MulitpartFile 接口中方法，把上传的文件写到指定位置
-        uploadFile.transferTo(new File(file,fileName));
-        System.out.println(user);
-        user.setHeadportrait(image_url+datePath + "/" +fileName);
         return userService.updateUserInfo(user);
     }
+
+    @RequestMapping("editMate")
+    @ApiOperation("编辑心仪对象信息，编辑成功返回1，修改失败返回0")
+    public int editUserInfo(Mate mate,HttpServletResponse response){
+        response.setHeader("Access-Control-Allow-Origin", "*");
+
+        Mate mate1 = userService.selectMyMateById(mate.getId());
+        if (mate1 != null){
+            return userService.updateUserMate(mate);
+        } else {
+            return userService.addUserMate(mate);
+        }
+    }
+
+    @RequestMapping("chooseMate")
+    @ApiOperation("通过条件筛选心仪对象")
+    public List<User> chooseUserInfo(Mate mate, HttpServletResponse response){
+        response.setHeader("Access-Control-Allow-Origin", "*");
+
+        return userService.selectUserByMate(mate);
+
+    }
+
+
+
 
 }

@@ -2,6 +2,7 @@ package com.xcy.mapper;
 
 import com.xcy.pojo.Dynamic;
 import com.xcy.pojo.Information;
+import com.xcy.pojo.Mate;
 import com.xcy.pojo.User;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -10,8 +11,6 @@ import java.util.List;
 
 @Mapper
 public interface UserMapper {
-    /*通过id删除数据*/
-    int deleteByPrimaryKey(int id);
 
     /*通过email查询是否有该用户*/
     int validEmail(String email);
@@ -34,8 +33,6 @@ public interface UserMapper {
 
     User selectUserById(int id);
 
-    List<Dynamic> selectAllDynamic();
-
     int apply(int userId, int hotlistId);
 
     int updateApplyNum(int hotlistId);
@@ -52,7 +49,13 @@ public interface UserMapper {
 
     int readMessage(int id);
 
-    int deleteDynamic(int id);
-
     int updateUserInfo(User user);
+
+    Mate selectMyMateById(int id);
+
+    int updateUserMate(Mate mate);
+
+    int addUserMate(Mate mate);
+
+    List<User> selectUserByMate(Mate mate);
 }

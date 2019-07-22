@@ -12,6 +12,17 @@ public class Hotlist {
     private int id;
     @ApiModelProperty("创建者头像地址")
     private String headportrait;
+
+    public String getHotlistname() {
+        return hotlistname;
+    }
+
+    public void setHotlistname(String hotlistname) {
+        this.hotlistname = hotlistname;
+    }
+
+    @ApiModelProperty("活动名字")
+    private String hotlistname;
     @ApiModelProperty("活动总人数")
     private int sumuser;
     @ApiModelProperty("创建者昵称")

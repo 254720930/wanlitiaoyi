@@ -1,7 +1,7 @@
 package com.xcy.service;
 
-import com.xcy.pojo.Dynamic;
 import com.xcy.pojo.Information;
+import com.xcy.pojo.Mate;
 import com.xcy.pojo.User;
 
 import java.util.List;
@@ -29,8 +29,6 @@ public interface UserService {
 
     User selectUserById(int id);
 
-    List<Dynamic> selectAllDynamic();
-
     int apply(int userId, int hotlistId);
 
     int sendMessage(Information information);
@@ -45,7 +43,13 @@ public interface UserService {
 
     int readMessage(int id);
 
-    int deleteDynamic(int id);
-
     int updateUserInfo(User user);
+
+    Mate selectMyMateById(int id);
+
+    int updateUserMate(Mate mate);
+
+    int addUserMate(Mate mate);
+
+    List<User> selectUserByMate(Mate mate);
 }

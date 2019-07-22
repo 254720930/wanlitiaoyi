@@ -32,7 +32,7 @@ public class User implements Serializable {
     @ApiModelProperty("民族")
     private String nation;
     @ApiModelProperty("学历")
-    private String niversitys;
+    private String eduinfo;
     @ApiModelProperty("职业")
     private String job;
     @ApiModelProperty("年收入")
@@ -51,6 +51,16 @@ public class User implements Serializable {
     private String cardz;
     @ApiModelProperty("身份证反面")
     private String cardf;
+    @ApiModelProperty("是否有房")
+    private String house;
+
+    public String getHouse() {
+        return house;
+    }
+
+    public void setHouse(String house) {
+        this.house = house;
+    }
 
     public int getId() {
         return id;
@@ -156,12 +166,12 @@ public class User implements Serializable {
         this.nation = nation;
     }
 
-    public String getNiversitys() {
-        return niversitys;
+    public String getEduinfo() {
+        return eduinfo;
     }
 
-    public void setNiversitys(String niversitys) {
-        this.niversitys = niversitys;
+    public void setEduinfo(String eduinfo) {
+        this.eduinfo = eduinfo;
     }
 
     public String getJob() {
@@ -252,7 +262,7 @@ public class User implements Serializable {
                 ", constellation='" + constellation + '\'' +
                 ", blood='" + blood + '\'' +
                 ", nation='" + nation + '\'' +
-                ", niversitys='" + niversitys + '\'' +
+                ", niversitys='" + eduinfo + '\'' +
                 ", job='" + job + '\'' +
                 ", income='" + income + '\'' +
                 ", address='" + address + '\'' +

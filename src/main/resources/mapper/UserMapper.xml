@@ -4,7 +4,7 @@
 
 
   <sql id="selectUser">
-    select * from
+    select * from user
   </sql>
 
   <!-- 通过email检查是否存在-->
@@ -15,7 +15,7 @@
 
   <select id="selectUserByEmail" resultType="com.xcy.pojo.User" parameterType="string">
         <include refid="selectUser" />
-         where u.email = #{email}
+         where email = #{email}
   </select>
 
   <select id="login" resultType="int">
@@ -46,14 +46,12 @@
       #{item}
     </foreach>
   </select>
+
   <select id="selectUserById" resultType="com.xcy.pojo.User" parameterType="int">
     <include refid="selectUser" />
-      where u.id = #{id}
+      where id = #{id}
+  </select>
 
-  </select>
-  <select id="selectAllDynamic" resultType="com.xcy.pojo.Dynamic">
-    select u.username,u.headportrait,d.* from dynamiccondition d left join user u on d.userId = u.id
-  </select>
 
   <select id="myNotReadSystemMessage" resultType="com.xcy.pojo.Information" parameterType="int">
     select * from information where recipients = 0 and addresser = #{addresser} and status = 0
@@ -70,14 +68,47 @@
   <select id="myNotReadUserMessage" resultType="com.xcy.pojo.Information" parameterType="int">
     select * from information where recipients > 0 and addresser = #{addresser} and status = 0
   </select>
+  <select id="selectMyMateById" resultType="com.xcy.pojo.Mate" parameterType="int">
+    select * from choosermate where id = {id}
+  </select>
 
 
-    <delete id="deleteDynamic">
-        delete from dynamiccondition where id = #{id}
-    </delete>
+  <select id="selectUserByMate" resultType="com.xcy.pojo.User" parameterType="com.xcy.pojo.Mate">
+    select * from user
+    <trim prefix="where" suffixOverrides="and">
+      <if test="#{sex} != null">
+        sex = #{sex} and
+      </if>
+      <if test="#{minHeight} != null">
+        heights > #{minHeight} and
+      </if>
+      <if test="#{maxHeight} != null">
+        #{maxHeight} > heights and
+      </if>
+      <if test="#{maxAge} != null">
+        #{maxAge} > age and
+      </if>
+      <if test="#{minAge} != null">
+        age > #{minAge} and
+      </if>
+      <if test="#{income} != null">
+        income = #{income} and
+      </if>
+      <if test="#{address} != null">
+        address like #{address}"*" and
+      </if>
+      <if test="#{marry} != null">
+        marry = #{marry} and
+      </if>
+      <if test="#{eduinfo} != null">
+        eduinfo = #{eduinfo} and
+      </if>
+    </trim>
+  </select>
 
 
-    <insert id="register" parameterType="com.xcy.pojo.User">
+
+  <insert id="register" parameterType="com.xcy.pojo.User">
      insert into user(id,email,password) values (null,#{email},#{password})
   </insert>
 
@@ -87,6 +118,10 @@
     <insert id="sendMessage" parameterType="com.xcy.pojo.Information">
         insert into information(recipients,addresser,content,sendTime,status) value (#{recipients},#{addresser},#{content},now(),0)
     </insert>
+
+  <insert id="addUserMate" parameterType="com.xcy.pojo.Mate">
+        insert into information value (#{id},#{sex},#{minHeight},#{maxHeight},#{maxAge},#{minAge},#{income},#{address},#{marry},#{eduinfo},#{characters})
+  </insert>
 
   <update id="resetPassword" parameterType="com.xcy.pojo.User">
     update user set password = #{password} where email = #{email};
@@ -158,6 +193,43 @@
         house = #{house},
       </if>
   </trim>
+    where id = #{id}
+  </update>
+
+  <update id="updateUserMate" parameterType="com.xcy.pojo.Mate">
+    update choosemate
+    <trim prefix="set" suffixOverrides=",">
+      <if test="#{sex} != null">
+        sex = #{sex},
+      </if>
+      <if test="#{minHeight} != null">
+        minHeight = #{minHeight},
+      </if>
+      <if test="#{maxHeight} != null">
+        maxHeight = #{maxHeight},
+      </if>
+      <if test="#{maxAge} != null">
+        maxAge = #{maxAge},
+      </if>
+      <if test="#{minAge} != null">
+        minAge = #{minAge},
+      </if>
+      <if test="#{income} != null">
+        income = #{income},
+      </if>
+      <if test="#{address} != null">
+        address = #{address},
+      </if>
+      <if test="#{marry} != null">
+        marry = #{marry},
+      </if>
+      <if test="#{eduinfo} != null">
+        eduinfo = #{eduinfo},
+      </if>
+      <if test="#{characters} != null">
+        characters = #{characters},
+      </if>
+    </trim>
     where id = #{id}
   </update>
 </mapper>

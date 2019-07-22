@@ -23,6 +23,16 @@ public class Dynamic {
     private String headportrait;
     @ApiModelProperty("用户昵称")
     private String username;
+    @ApiModelProperty("置顶权限")
+    private int upcode;
+
+    public int getUpcode() {
+        return upcode;
+    }
+
+    public void setUpcode(int upcode) {
+        this.upcode = upcode;
+    }
 
     public String getUsername() {
         return username;
